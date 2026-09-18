@@ -13,12 +13,12 @@ services:
       - "${APACHE_HOST_PORT:-8091}:80"
       - "${SSH_HOST_PORT:-2222}:22"
       # Réserve de ports libres pour tester des apps Node/Python à la volée
-      - "3001:3001"
-      - "3002:3002"
-      - "3003:3003"
-      - "3004:3004"
-      - "3005:3005"
-      - "3006:3006"
+      - "4801:4801"
+      - "4802:4802"
+      - "4803:4803"
+      - "4804:4804"
+      - "4805:4805"
+      - "4806:4806"
     volumes:
       # IMPORTANT : Portainer parle directement au docker.sock de l'hôte, donc les sources de
       # bind mount doivent être les chemins RÉELS sur le système de fichiers HAOS.
