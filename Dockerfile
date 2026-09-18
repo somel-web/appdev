@@ -24,6 +24,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && a2enconf php${PHP_VERSION}-fpm \
     && rm -rf /var/lib/apt/lists/*
 
+# --- Alignement du GID www-data sur celui d'Alpine (82) ---
+# Les fichiers sous /share/htdocs ont été créés par l'ancien add-on somel-apache2 (basé Alpine,
+# où www-data = GID 82). Debian utilise 33 par défaut : sans cet ajustement, Apache/PHP-FPM ne
+# reconnaissent pas le groupe propriétaire des fichiers existants (affiché comme "82" par ls).
+RUN groupmod -g 82 www-data && usermod -g 82 www-data
+
 # --- Node.js (LTS) + Python (version système Debian) ---
 RUN apt-get update && apt-get install -y --no-install-recommends \
         nodejs \
@@ -47,6 +53,6 @@ COPY config/apache/sites-available/000-default.conf /etc/apache2/sites-available
 # --- Supervisord : orchestre apache2, php-fpm et sshd dans le même conteneur ---
 COPY config/supervisor/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
-EXPOSE 80 22 3001-3006
+EXPOSE 80 22 4801-4806
 
 CMD ["/usr/bin/supervisord", "-n", "-c", "/etc/supervisor/supervisord.conf"]
