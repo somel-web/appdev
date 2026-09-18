@@ -20,13 +20,19 @@ services:
       - "3005:3005"
       - "3006:3006"
     volumes:
+      # IMPORTANT : Portainer parle directement au docker.sock de l'hôte, donc les sources de
+      # bind mount doivent être les chemins RÉELS sur le système de fichiers HAOS.
+      # /share et /media n'existent qu'à l'intérieur des conteneurs gérés par le Supervisor ;
+      # côté hôte, ce sont /mnt/data/supervisor/share et /mnt/data/supervisor/media.
+      # (la partie à droite du ":", elle, reste le chemin voulu DANS ce conteneur)
+
       # Config persistée sur l'hôte, reconstruite à l'identique en cas de réinstall
-      - /share/appdev/config/apache/sites-available:/etc/apache2/sites-available
-      - /share/appdev/config/php-fpm:/etc/php/${PHP_VERSION:-8.3}/fpm/pool.d
-      - /share/appdev/config/ssh/authorized_keys:/root/.ssh/authorized_keys:ro
+      - /mnt/data/supervisor/share/appdev/config/apache/sites-available:/etc/apache2/sites-available
+      - /mnt/data/supervisor/share/appdev/config/php-fpm:/etc/php/${PHP_VERSION:-8.3}/fpm/pool.d
+      - /mnt/data/supervisor/share/appdev/config/ssh/authorized_keys:/root/.ssh/authorized_keys:ro
       # Sites servis par Apache (structure actuelle conservée)
-      - /share/htdocs:/share/htdocs
+      - /mnt/data/supervisor/share/htdocs:/share/htdocs
       # Accès générique à /media (y compris les 2 disques USB montés par HAOS), lecture/écriture
-      - /media:/media
+      - /mnt/data/supervisor/media:/media
     # environment:
     #   - TZ=Europe/Paris
