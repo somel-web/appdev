@@ -1,0 +1,32 @@
+version: "3.9"
+
+services:
+  appdev:
+    build:
+      context: .
+      args:
+        PHP_VERSION: ${PHP_VERSION:-8.3}
+        ROOT_PASSWORD: ${ROOT_PASSWORD:-changeme}
+    container_name: appdev
+    restart: unless-stopped
+    ports:
+      - "${APACHE_HOST_PORT:-8091}:80"
+      - "${SSH_HOST_PORT:-2222}:22"
+      # Réserve de ports libres pour tester des apps Node/Python à la volée
+      - "3001:3001"
+      - "3002:3002"
+      - "3003:3003"
+      - "3004:3004"
+      - "3005:3005"
+      - "3006:3006"
+    volumes:
+      # Config persistée sur l'hôte, reconstruite à l'identique en cas de réinstall
+      - /share/appdev/config/apache/sites-available:/etc/apache2/sites-available
+      - /share/appdev/config/php-fpm:/etc/php/${PHP_VERSION:-8.3}/fpm/pool.d
+      - /share/appdev/config/ssh/authorized_keys:/root/.ssh/authorized_keys:ro
+      # Sites servis par Apache (structure actuelle conservée)
+      - /share/htdocs:/share/htdocs
+      # Accès générique à /media (y compris les 2 disques USB montés par HAOS), lecture/écriture
+      - /media:/media
+    # environment:
+    #   - TZ=Europe/Paris
