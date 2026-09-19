@@ -30,6 +30,7 @@ services:
       - /mnt/data/supervisor/share/appdev/config/apache/sites-available:/etc/apache2/sites-available
       - /mnt/data/supervisor/share/appdev/config/php-fpm:/etc/php/${PHP_VERSION:-8.3}/fpm/pool.d
       - /mnt/data/supervisor/share/appdev/config/ssh/authorized_keys:/root/.ssh/authorized_keys:ro
+      - /mnt/data/supervisor/share/appdev/config/vscode-server:/root/.vscode-server
       # Sites servis par Apache (structure actuelle conservée)
       - /mnt/data/supervisor/share/htdocs:/share/htdocs
       # Accès générique à /media (y compris les 2 disques USB montés par HAOS), lecture/écriture
