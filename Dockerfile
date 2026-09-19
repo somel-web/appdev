@@ -24,16 +24,16 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && a2enconf php${PHP_VERSION}-fpm \
     && rm -rf /var/lib/apt/lists/*
 
-# --- Alignement du GID www-data sur celui d'Alpine (82) ---
-# Les fichiers sous /share/htdocs ont été créés par l'ancien add-on somel-apache2 (basé Alpine,
-# où www-data = GID 82). Debian utilise 33 par défaut : sans cet ajustement, Apache/PHP-FPM ne
-# reconnaissent pas le groupe propriétaire des fichiers existants (affiché comme "82" par ls).
-RUN groupmod -g 82 www-data && usermod -g 82 www-data
-
 # --- Node.js (LTS) + Python (version système Debian) ---
 RUN apt-get update && apt-get install -y --no-install-recommends \
         nodejs \
         python3 python3-pip python3-venv \
+    && rm -rf /var/lib/apt/lists/*
+
+# --- Outils média, réseau et diagnostic ---
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        ffmpeg jq zip rsync sqlite3 make gcc \
+        iproute2 iputils-ping dnsutils tmux htop \
     && rm -rf /var/lib/apt/lists/*
 
 # --- Composer ---
